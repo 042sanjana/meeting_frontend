@@ -1,0 +1,53 @@
+.calendar-page {
+  padding: 30px;
+}
+
+.task-count {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1976d2;
+  color: white;
+  font-size: 12px;
+  margin: auto;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.task-card {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.overdue-task {
+  border-left: 6px solid red;
+}
+
+.upcoming-task {
+  border-left: 6px solid orange;
+}
+
+.future-task {
+  border-left: 6px solid green;
+}
+
+.high-priority {
+  color: red;
+}
+
+.medium-priority {
+  color: orange;
+}
+
+.low-priority {
+  color: green;
+}
+
+.legend {
+  margin-top: 15px;
+  display: flex;
+  gap: 20px;
+}
