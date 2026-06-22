@@ -1,23 +1,21 @@
-import React,
-{
+import React, {
   useState,
   useEffect
-}
-from "react";
+} from "react";
 
 import axios from "axios";
-
-import Calendar
-from "react-calendar";
+import Calendar from "react-calendar";
 
 import "react-calendar/dist/Calendar.css";
-
 import "./TaskCalendar.css";
-import { useParams } from "react-router-dom";
+
+import {
+  useParams
+} from "react-router-dom";
 
 function TaskCalendar() {
-  
-   const { meetingId } = useParams();
+
+  const { meetingId } = useParams();
 
   const [tasks, setTasks] =
     useState([]);
@@ -26,93 +24,107 @@ function TaskCalendar() {
     setSelectedDate] =
     useState(new Date());
 
+  const formatLocalDate =
+    (date) => {
+
+      const year =
+        date.getFullYear();
+
+      const month =
+        String(
+          date.getMonth() + 1
+        ).padStart(2, "0");
+
+      const day =
+        String(
+          date.getDate()
+        ).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    };
+
   useEffect(() => {
 
     fetchTasks();
 
-  }, []);
+  }, [meetingId]);
 
   const fetchTasks = async () => {
 
     try {
 
-      const response =
-        
+      let response;
+
+      if (meetingId) {
+
+        response =
           await axios.get(
-  `http://127.0.0.1:8000/meetings/${meetingId}/tasks`
-);
-        
+            `http://127.0.0.1:8000/meetings/${meetingId}/tasks`
+          );
+
+      } else {
+
+        response =
+          await axios.get(
+            "http://127.0.0.1:8000/tasks"
+          );
+
+      }
 
       setTasks(
-        response.data
-      );
-
-      checkReminders(
-        response.data
+        response.data || []
       );
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "Error fetching tasks:",
+        error
+      );
 
     }
+
   };
 
-  const checkReminders = (
-    taskList
-  ) => {
+  const updateStatus =
+    async (
+      taskId,
+      status
+    ) => {
 
-    if (
-      Notification.permission !==
-      "granted"
-    ) {
+      try {
 
-      Notification.requestPermission();
-    }
-
-    const today =
-      new Date();
-
-    taskList.forEach(task => {
-
-      const deadline =
-        new Date(
-          task.deadline_date
+        await axios.put(
+          `http://127.0.0.1:8000/tasks/${taskId}/status`,
+          null,
+          {
+            params: {
+              status
+            }
+          }
         );
 
-      const diff =
-        Math.ceil(
-          (
-            deadline -
-            today
-          ) /
-          (
-            1000 *
-            60 *
-            60 *
-            24
+        setTasks(prev =>
+          prev.map(task =>
+            task.id === taskId
+              ? {
+                  ...task,
+                  status
+                }
+              : task
           )
         );
 
-      if (
-        diff === 1 &&
-        Notification.permission ===
-        "granted"
-      ) {
+      } catch (error) {
 
-        new Notification(
-          "Task Due Tomorrow",
-          {
-            body:
-              `${task.owner}
-              - ${task.task}`
-          }
+        console.log(
+          "Status update failed",
+          error
         );
+
       }
 
-    });
-
-  };
+    };
 
   const tileContent = ({
     date,
@@ -125,37 +137,50 @@ function TaskCalendar() {
       return null;
 
     const currentDate =
-      date
-        .toISOString()
-        .split("T")[0];
-
-    const dayTasks =
-      tasks.filter(
-        task =>
-          task.deadline_date ===
-          currentDate
+      formatLocalDate(
+        date
       );
 
+    const count =
+      tasks.filter(
+        task =>
+          task.deadline_date &&
+          task.deadline_date.substring(
+            0,
+            10
+          ) === currentDate
+      ).length;
+
     if (
-      dayTasks.length === 0
+      count === 0
     )
       return null;
 
     return (
+
       <div
         className="task-marker"
       >
-        {dayTasks.length}
+        {count}
       </div>
+
     );
   };
 
-  const tasksForDate =
-    tasks.filter(task =>
-      task.deadline_date ===
+  const selectedDateString =
+    formatLocalDate(
       selectedDate
-        .toISOString()
-        .split("T")[0]
+    );
+
+  const tasksForDate =
+    tasks.filter(
+      task =>
+        task.deadline_date &&
+        task.deadline_date.substring(
+          0,
+          10
+        ) ===
+          selectedDateString
     );
 
   return (
@@ -169,8 +194,12 @@ function TaskCalendar() {
       </h1>
 
       <Calendar
-        onChange={
-          setSelectedDate
+        onChange={(value) =>
+          setSelectedDate(
+            Array.isArray(value)
+              ? value[0]
+              : value
+          )
         }
         value={
           selectedDate
@@ -181,62 +210,155 @@ function TaskCalendar() {
       />
 
       <h2>
-        Tasks on
+        Tasks for:
         {" "}
-        {
-          selectedDate
-          .toDateString()
-        }
+        {selectedDateString}
       </h2>
 
-      {
-        tasksForDate.length > 0
-        ? tasksForDate.map(
-            (
-              task,
-              index
-            ) => (
+      {tasksForDate.length >
+      0 ? (
 
-          <div
-            key={index}
-            className="task-card"
-          >
+        tasksForDate.map(
+          task => {
 
-            <h3>
-              {task.owner}
-            </h3>
+            const today =
+              formatLocalDate(
+                new Date()
+              );
 
-            <p>
-              {task.task}
-            </p>
+            const deadline =
+              task.deadline_date
+                ? task.deadline_date.substring(
+                    0,
+                    10
+                  )
+                : "N/A";
 
-            <p>
-              Deadline:
-              {" "}
-              {
-                task.deadline_date
-              }
-            </p>
+            const overdue =
+              deadline !==
+                "N/A" &&
+              deadline <
+                today &&
+              task.status !==
+                "Completed";
 
-            <p>
-              Priority:
-              {" "}
-              {
-                task.priority
-              }
-            </p>
+            return (
 
-          </div>
+              <div
+                key={task.id}
+                className={`task-card ${
+                  overdue
+                    ? "overdue"
+                    : ""
+                }`}
+              >
 
-        ))
-        :
-        <p>
-          No Tasks
-        </p>
-      }
+                <h3>
+                  👤 {task.owner}
+                </h3>
+
+                <p>
+                  <strong>
+                    Task:
+                  </strong>{" "}
+                  {task.task}
+                </p>
+
+                <p>
+                  <strong>
+                    Deadline:
+                  </strong>{" "}
+                  {deadline}
+                </p>
+
+                <p>
+                  <strong>
+                    Priority:
+                  </strong>{" "}
+                  {task.priority}
+                </p>
+
+                <p>
+
+                  <strong>
+                    Current Status:
+                  </strong>{" "}
+
+                  <span
+                    className={
+                      task.status ===
+                      "Completed"
+                        ? "completed"
+                        : task.status ===
+                          "In Progress"
+                        ? "progress"
+                        : "pending"
+                    }
+                  >
+                    {task.status}
+                  </span>
+
+                </p>
+
+                <div
+                  className="status-row"
+                >
+
+                  <label>
+                    Change Status:
+                  </label>
+
+                  <select
+                    className="status-select"
+                    value={
+                      task.status ||
+                      "Pending"
+                    }
+                    onChange={(e) =>
+                      updateStatus(
+                        task.id,
+                        e.target.value
+                      )
+                    }
+                  >
+
+                    <option value="Pending">
+                      Pending
+                    </option>
+
+                    <option value="In Progress">
+                      In Progress
+                    </option>
+
+                    <option value="Completed">
+                      Completed
+                    </option>
+
+                  </select>
+
+                </div>
+
+              </div>
+
+            );
+
+          }
+        )
+
+      ) : (
+
+        <div className="no-task">
+
+          No Tasks Found For This Date
+
+        </div>
+
+      )}
 
     </div>
+
   );
+
 }
 
 export default TaskCalendar;

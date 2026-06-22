@@ -31,11 +31,17 @@ function App() {
           element={<Register />}
         />
  <Route
-          path="/calendar"
-          element={
-            <TaskCalendar />
-          }
-        />
+  path="/calendar/:meetingId"
+  element={<TaskCalendar />}
+/>
+
+
+
+<Route
+  path="/calendar"
+  element={<TaskCalendar />}
+/>
+        
         <Route
           path="/dashboard"
           element={<Dashboard />}

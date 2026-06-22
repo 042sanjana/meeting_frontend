@@ -26,7 +26,6 @@ function Dashboard() {
 
     <div className="dashboard">
 
-      {/* Navbar */}
 
       <nav className="navbar">
 

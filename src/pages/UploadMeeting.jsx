@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./UploadMeeting.css";
+import { useNavigate } from "react-router-dom";
 
 function UploadMeeting() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
 
+  
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -34,6 +37,8 @@ function UploadMeeting() {
       );
 
       setResult(response.data);
+      
+
     } catch (error) {
       console.error(error);
       alert("Upload failed");
@@ -89,7 +94,7 @@ function UploadMeeting() {
 
         {result && (
           <div className="results">
-            
+
 <div className="summary-card">
   <h2>📂 File Information</h2>
 
@@ -116,15 +121,13 @@ function UploadMeeting() {
   </p>
 </div>
 
-            {/* Summary */}
             <div className="summary-card">
               <h2>📋 Meeting Summary</h2>
 
               <p>{result.summary}</p>
             </div>
 
-            {/* Tasks */}
-            {/* Tasks */}
+         
 <div className="task-section">
   <h2>✅ Action Items</h2>
 
@@ -166,7 +169,7 @@ function UploadMeeting() {
     <p>No action items detected.</p>
   )}
 </div>
-            {/* Transcript */}
+            
             <div className="transcript-card">
               <h2>📝 Transcript</h2>
 
@@ -176,6 +179,33 @@ function UploadMeeting() {
                 rows={10}
               />
             </div>
+
+
+            <div className="action-buttons">
+
+  <button
+    className="calendar-btn"
+    onClick={() =>
+      navigate(
+        `/calendar/${result.meeting_id}`
+      )
+    }
+  >
+    📅 View Calendar
+  </button>
+
+  <button
+    className="details-btn"
+    onClick={() =>
+      navigate(
+        `/meeting/${result.meeting_id}`
+      )
+    }
+  >
+    📄 View Meeting Details
+  </button>
+
+</div>
 
             
 
