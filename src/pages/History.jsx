@@ -29,9 +29,26 @@ function History() {
 
     try {
 
+      const user =
+  JSON.parse(
+    localStorage.getItem("user")
+  );
+
+const userId =
+  user?.id;
+
+      if (!userId) {
+
+        alert(
+          "Please login first"
+        );
+
+        return;
+      }
+
       const response =
         await API.get(
-          "/meetings"
+          `/meetings/user/${userId}`
         );
 
       setMeetings(
@@ -46,7 +63,12 @@ function History() {
 
       console.log(error);
 
+      alert(
+        "Failed to load meetings"
+      );
+
     }
+
   };
 
   const deleteMeeting =
@@ -70,7 +92,8 @@ function History() {
           prev =>
             prev.filter(
               meeting =>
-                meeting.id !== meetingId
+                meeting.id !==
+                meetingId
             )
         );
 
@@ -78,7 +101,8 @@ function History() {
           prev =>
             prev.filter(
               meeting =>
-                meeting.id !== meetingId
+                meeting.id !==
+                meetingId
             )
         );
 
@@ -95,6 +119,7 @@ function History() {
         );
 
       }
+
     };
 
   const searchByDate = () => {
@@ -123,12 +148,14 @@ function History() {
             dbDate ===
             selectedDate
           );
+
         }
       );
 
     setMeetings(
       filtered
     );
+
   };
 
   const showAll = () => {
@@ -140,6 +167,7 @@ function History() {
     setSelectedDate(
       ""
     );
+
   };
 
   return (
@@ -153,8 +181,8 @@ function History() {
         </h1>
 
         <p>
-          Search and manage
-          uploaded meetings
+          View and manage
+          your uploaded meetings
         </p>
 
       </div>
@@ -221,7 +249,7 @@ function History() {
 
                     deleteMeeting(
                       meeting.id
-                    )
+                    );
 
                   }}
                 >
@@ -237,11 +265,9 @@ function History() {
                 </p>
 
                 <span>
-                  {
-                    new Date(
-                      meeting.created_at
-                    ).toLocaleString()
-                  }
+                  {new Date(
+                    meeting.created_at
+                  ).toLocaleString()}
                 </span>
 
               </div>
@@ -256,6 +282,7 @@ function History() {
     </div>
 
   );
+
 }
 
 export default History;
