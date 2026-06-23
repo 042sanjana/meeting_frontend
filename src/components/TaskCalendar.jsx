@@ -59,10 +59,15 @@ function TaskCalendar() {
 
         if (meetingId) {
 
-          response =
-            await axios.get(
-              `http://127.0.0.1:8000/meetings/${meetingId}/tasks`
-            );
+          const user =
+  JSON.parse(
+    localStorage.getItem("user")
+  );
+
+response =
+  await axios.get(
+    `http://127.0.0.1:8000/meetings/user/${user.id}/tasks`
+  );
 
         } else {
 

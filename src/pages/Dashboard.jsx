@@ -129,7 +129,7 @@ function Dashboard() {
         <div
           className="dashboard-card"
           onClick={() =>
-            navigate("/calendar")
+            navigate("/calendar/:meetingId")
           }
         >
           <div className="icon">
@@ -149,7 +149,7 @@ function Dashboard() {
         <div
           className="dashboard-card"
           onClick={() =>
-            navigate("/upload")
+            navigate("/tasks")
           }
         >
           <div className="icon">
@@ -157,11 +157,11 @@ function Dashboard() {
           </div>
 
           <h3>
-            AI Summary
+            Tasks
           </h3>
 
           <p>
-            Generate meeting summaries.
+            Task Table
           </p>
 
         </div>

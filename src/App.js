@@ -34,13 +34,13 @@ function App() {
   path="/calendar/:meetingId"
   element={<TaskCalendar />}
 />
-
-
-
 <Route
-  path="/calendar"
-  element={<TaskCalendar />}
+  path="/tasks"
+  element={<TaskTable />}
 />
+
+
+
         
         <Route
           path="/dashboard"
