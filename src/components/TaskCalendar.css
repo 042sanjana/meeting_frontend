@@ -245,3 +245,20 @@
   font-size: 18px;
   text-align: center;
 }
+.deadline-edit {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.deadline-edit input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.status-select {
+  padding: 8px;
+  border-radius: 6px;
+}
