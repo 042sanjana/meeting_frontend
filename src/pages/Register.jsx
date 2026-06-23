@@ -128,14 +128,22 @@ if (
           }
         );
         const data=await response.json();
-        if(response.ok){
-  
-    setMessage(
-      "Registration Successful"
-    );
-  
- navigate("/dashboard");
-  }
+      if(response.ok){
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify({
+      name,
+      email
+    })
+  );
+
+  setMessage(
+    "Registration Successful"
+  );
+
+  navigate("/dashboard");
+}
   else{
     setMessage(data.detail)
   }

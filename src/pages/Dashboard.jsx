@@ -7,25 +7,28 @@ function Dashboard() {
 
   const user =
     JSON.parse(
-      localStorage.getItem("user"))||{};
-      const userName=user?.name||"User";
-      const userEmail=user?.email||"";
-    
+      localStorage.getItem("user")
+    ) || {};
+
+  const userName =
+    user?.name || "User";
+
+  const userEmail =
+    user?.email || "";
 
   const logout = () => {
 
-    localStorage.removeItem("user");
+    localStorage.removeItem(
+      "user"
+    );
 
     navigate("/");
 
   };
 
- 
   return (
-    
 
     <div className="dashboard">
-
 
       <nav className="navbar">
 
@@ -38,9 +41,11 @@ function Dashboard() {
           <div className="profile">
 
             <div className="avatar">
-              {user?.name?.charAt(0).toUpperCase()}
+              {user?.name
+                ?.charAt(0)
+                ?.toUpperCase()}
             </div>
-             
+
             <div className="profile-info">
 
               <span className="name">
@@ -66,8 +71,6 @@ function Dashboard() {
 
       </nav>
 
-      {/* Hero */}
-
       <div className="hero">
 
         <h1>
@@ -81,8 +84,6 @@ function Dashboard() {
         </p>
 
       </div>
-
-      {/* Cards */}
 
       <div className="card-grid">
 
@@ -129,7 +130,7 @@ function Dashboard() {
         <div
           className="dashboard-card"
           onClick={() =>
-            navigate("/calendar/:meetingId")
+            navigate("/calendar")
           }
         >
           <div className="icon">
@@ -149,22 +150,24 @@ function Dashboard() {
         <div
           className="dashboard-card"
           onClick={() =>
-            navigate("/tasks")
+            navigate("/outlook-calendar")
           }
         >
           <div className="icon">
-            🤖
+            📆
           </div>
 
           <h3>
-            Tasks
+            Outlook Calendar
           </h3>
 
           <p>
-            Task Table
+            View all task deadlines.
           </p>
 
         </div>
+
+        
 
       </div>
 
