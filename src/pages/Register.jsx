@@ -128,7 +128,6 @@ if (
           }
         );
         const data=await response.json();
-        console.log("REGISTER DATA:", data);
       if(response.ok){
 
   localStorage.setItem(
