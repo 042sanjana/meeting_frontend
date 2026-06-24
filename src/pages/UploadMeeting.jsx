@@ -290,17 +290,7 @@ return (
             📅 View Calendar
           </button>
 
-          <button
-            className="details-btn"
-            onClick={() =>
-              navigate(
-                `/meeting/${result.meeting_id}`
-              )
-            }
-          >
-            📄 View Meeting Details
-          </button>
-
+          
         </div>
 
       </div>

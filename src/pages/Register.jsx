@@ -128,15 +128,13 @@ if (
           }
         );
         const data=await response.json();
+        console.log("REGISTER DATA:", data);
       if(response.ok){
 
   localStorage.setItem(
-    "user",
-    JSON.stringify({
-      name,
-      email
-    })
-  );
+  "user",
+  JSON.stringify(data)
+);
 
   setMessage(
     "Registration Successful"
