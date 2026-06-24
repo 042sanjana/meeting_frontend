@@ -46,12 +46,17 @@ function Login() {
 
       const data =
         await response.json();
-        console.log("Response",data);
+
+      console.log(
+        "Response:",
+        data
+      );
 
       if (!response.ok) {
 
         setError(
-          data.detail
+          data.detail ||
+          "Login failed"
         );
 
         return;
@@ -63,9 +68,25 @@ function Login() {
           data.user
         )
       );
-      console.log("Saved user:",data.user);
 
-      navigate("/dashboard");
+      localStorage.setItem(
+        "userId",
+        data.user.id
+      );
+
+      console.log(
+        "Saved User:",
+        data.user
+      );
+
+      console.log(
+        "Saved User ID:",
+        data.user.id
+      );
+
+      navigate(
+        "/dashboard"
+      );
 
     } catch (error) {
 
@@ -76,6 +97,7 @@ function Login() {
       );
 
     }
+
   };
 
   return (
@@ -95,9 +117,7 @@ function Login() {
         {error && (
 
           <div className="error">
-
             {error}
-
           </div>
 
         )}

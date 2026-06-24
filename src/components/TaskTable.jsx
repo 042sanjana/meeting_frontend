@@ -1,42 +1,95 @@
-function TaskTable({ tasks }) {
+import React, {
+  useEffect,
+  useState
+} from "react";
 
+import axios from "axios";
+
+import "./TaskTable.css";
+
+function TaskTable() {
+
+  const [tasks, setTasks] =
+    useState([]);
+
+  useEffect(() => {
+
+    fetchTasks();
+
+  }, []);
+
+  const fetchTasks = async () => {
+  try {
+
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
+
+    console.log("USER =", user);
+
+    const response = await axios.get(
+      `http://127.0.0.1:8000/meetings/user/${user.id}/tasks`
+    );
+
+    console.log(
+      "TASKS RECEIVED =",
+      response.data
+    );
+
+    setTasks(response.data);
+
+  } catch (error) {
+
+    console.log(
+      "ERROR =",
+      error
+    );
+
+  }
+};
   return (
 
-    <table
-      border="1"
-      cellPadding="10"
-    >
+    <div className="task-table-container">
 
-      <thead>
+      <h2>
+        📋 My Tasks
+      </h2>
 
-        <tr>
+      <table className="task-table">
 
-          <th>
-            Owner
-          </th>
+        <thead>
 
-          <th>
-            Task
-          </th>
+          <tr>
 
-          <th>
-            Deadline
-          </th>
+            <th>
+              Owner
+            </th>
 
-        </tr>
+            <th>
+              Task
+            </th>
 
-      </thead>
+            <th>
+              Deadline
+            </th>
 
-      <tbody>
+            <th>
+              Status
+            </th>
 
-        {
-          tasks.map(
-            (
-              task,
-              index
-            ) => (
+          </tr>
 
-              <tr key={index}>
+        </thead>
+
+        <tbody>
+
+          {tasks.length > 0 ? (
+
+            tasks.map(task => (
+
+              <tr
+                key={task.id}
+              >
 
                 <td>
                   {task.owner}
@@ -47,20 +100,57 @@ function TaskTable({ tasks }) {
                 </td>
 
                 <td>
-                  {task.deadline}
+                  {task.deadline_date}
+                </td>
+
+                <td>
+
+                  <span
+                    className={
+                      task.status ===
+                      "Completed"
+                        ? "completed"
+                        : task.status ===
+                          "In Progress"
+                        ? "progress"
+                        : "pending"
+                    }
+                  >
+
+                    {task.status}
+
+                  </span>
+
                 </td>
 
               </tr>
 
-            )
-          )
-        }
+            ))
 
-      </tbody>
+          ) : (
 
-    </table>
+            <tr>
+
+              <td
+                colSpan="4"
+              >
+
+                No Tasks Found
+
+              </td>
+
+            </tr>
+
+          )}
+
+        </tbody>
+
+      </table>
+
+    </div>
 
   );
+
 }
 
 export default TaskTable;

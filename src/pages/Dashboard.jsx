@@ -147,25 +147,7 @@ function Dashboard() {
 
         </div>
 
-        <div
-          className="dashboard-card"
-          onClick={() =>
-            navigate("/outlook-calendar")
-          }
-        >
-          <div className="icon">
-            📆
-          </div>
-
-          <h3>
-            Outlook Calendar
-          </h3>
-
-          <p>
-            View all task deadlines.
-          </p>
-
-        </div>
+        
 
         
 

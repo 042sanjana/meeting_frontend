@@ -16,6 +16,7 @@ import "./pages/History.css";
 import "./pages/UploadMeeting.css"
 import TaskCalendar from "./components/TaskCalendar";
 import  "./components/TaskCalendar.css";
+import OutlookCalendar from "./pages/OutlookCalendar";
 
 function App() {
 
@@ -38,9 +39,15 @@ function App() {
   path="/tasks"
   element={<TaskTable />}
 />
+<Route
+  path="/outlook-calendar"
+  element={<OutlookCalendar />}
+/>
 
-
-
+<Route
+  path="/calendar"
+  element={<TaskCalendar />}
+/>
         
         <Route
           path="/dashboard"
@@ -56,6 +63,9 @@ function App() {
           path="/history"
           element={<History />}
         />
+
+
+        
 
         <Route
           path="/meeting/:id"
