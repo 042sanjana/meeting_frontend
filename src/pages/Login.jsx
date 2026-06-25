@@ -83,7 +83,7 @@ function Login() {
         "Saved User ID:",
         data.user.id
       );
-
+      localStorage.setItem("token",data.access_token)
       navigate(
         "/dashboard"
       );

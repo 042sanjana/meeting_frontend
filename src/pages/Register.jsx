@@ -111,35 +111,52 @@ if (
 }
     try {
 
-      const response =
-        await fetch(
-          "http://127.0.0.1:8000/auth/register",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-            body: JSON.stringify({
-              name,
-              email,
-              password
-            })
-          }
-        );
-        const data=await response.json();
-      if(response.ok){
+  const response =
+    await fetch(
+      "http://127.0.0.1:8000/auth/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        })
+      }
+    );
+
+  const data =
+    await response.json();
+
+  console.log(data);
+
+   
+if (response.ok) {
 
   localStorage.setItem(
-  "user",
-  JSON.stringify(data)
-);
+    "token",
+    data.access_token
+  );
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify(data.user)
+  );
+
+  localStorage.setItem(
+    "userId",
+    data.user.id
+  );
 
   setMessage(
     "Registration Successful"
   );
 
   navigate("/dashboard");
+
 }
   else{
     setMessage(data.detail)

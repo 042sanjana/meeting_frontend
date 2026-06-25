@@ -25,13 +25,9 @@ const uploadAudio = async () => {
 
     setLoading(true);
 
-    const user = JSON.parse(
-      localStorage.getItem("user")
-    );
+  
 
-    const userId = user?.id;
-
-    console.log("User ID:", userId);
+  
 
     const formData = new FormData();
 
@@ -39,15 +35,16 @@ const uploadAudio = async () => {
       "file",
       file
     );
-
+    const token=localStorage.getItem("token");
     const response =
       await axios.post(
-        `http://127.0.0.1:8000/meetings/upload?user_id=${userId}`,
+        `http://127.0.0.1:8000/meetings/upload`,
         formData,
         {
           headers: {
             "Content-Type":
-              "multipart/form-data"
+              "multipart/form-data",
+              "Authorization":`Bearer ${token}`
           }
         }
       );
